@@ -7,6 +7,9 @@ from .speculative import SpeculativeExecutionEngine
 from .autotuner import GeneticVTableAutotuner
 from .abi import AgentBinaryInterface, POSIXAISyscallNumber
 from .mcp import MCPTransportMultiplexer
+from .ebpf_tracer import EBPFSystemTracer
+from .cuda_bridge import CudaMemoryBridgeWrapper
+from .distributed import DistributedVTableConsensus
 
 __all__ = [
     "PolymorphicAgentKernel",
@@ -19,4 +22,7 @@ __all__ = [
     "AgentBinaryInterface",
     "POSIXAISyscallNumber",
     "MCPTransportMultiplexer",
+    "EBPFSystemTracer",
+    "CudaMemoryBridgeWrapper",
+    "DistributedVTableConsensus",
 ]

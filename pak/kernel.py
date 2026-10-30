@@ -8,20 +8,28 @@ from pak.ipc import SharedMemoryIPCSpine
 from pak.speculative import SpeculativeExecutionEngine
 from pak.autotuner import GeneticVTableAutotuner
 from pak.abi import AgentBinaryInterface, POSIXAISyscallNumber
+from pak.ebpf_tracer import EBPFSystemTracer
+from pak.cuda_bridge import CudaMemoryBridgeWrapper
+from pak.distributed import DistributedVTableConsensus
 
 class PolymorphicAgentKernel:
-    def __init__(self, session_id: str, db_path: str = "./pak_vault"):
+    def __init__(self, session_id: str, db_path: str = "./pak_vault", cluster_peers: List[str] = None):
         self.session_id = session_id
         self.system_kernel = pak_core.AgentKernel(db_path)
         self.vtable: Dict[str, Callable] = {}
         
-        # Integrate Five AAOS Pillars
+        # Core AAOS Pillars
         self.shield = IntentShieldValidator()
         self.smt_verifier = SMTFormalVerifier()
         self.ipc_spine = SharedMemoryIPCSpine(name=f"shm_{session_id}", create=True)
         self.speculator = SpeculativeExecutionEngine(self)
         self.autotuner = GeneticVTableAutotuner(self)
         self.abi = AgentBinaryInterface(self)
+        
+        # Next-Frontier Architectural Extensions
+        self.ebpf_tracer = EBPFSystemTracer()
+        self.cuda_bridge = CudaMemoryBridgeWrapper()
+        self.consensus_mesh = DistributedVTableConsensus(node_id=session_id, cluster_peers=cluster_peers)
         
         self._initialize_vtable()
 
@@ -40,17 +48,14 @@ class PolymorphicAgentKernel:
         return {"status": "success", "id": kwargs.get("tx_token")}
 
     def secure_hot_swap(self, method_name: str, raw_code: str) -> bool:
-        # Step 1: Zero-Trust Intent Shield Inspection
         if not self.shield.inspect_and_tokenize_intent(raw_code):
             self.shield.emit_structured_telemetry_packet(self.session_id, f"hot_swap:{method_name}", {}, False)
             return False
 
-        # Step 2: Formal SMT / Z3 Invariant Verification
         if not self.smt_verifier.prove_safety_invariants(raw_code, method_name):
             self.shield.emit_structured_telemetry_packet(self.session_id, f"smt_refusal:{method_name}", {}, False)
             return False
 
-        # Step 3: Dynamic AST Compilation and In-Memory VTable Patching
         try:
             parsed_ast = ast.parse(raw_code)
             for node in ast.walk(parsed_ast):
@@ -59,6 +64,9 @@ class PolymorphicAgentKernel:
                     exec(raw_code, globals(), local_ctx)
                     self.vtable[method_name] = local_ctx[method_name].__get__(self, self.__class__)
                     self.shield.emit_structured_telemetry_packet(self.session_id, f"hot_swap:{method_name}", {"code_len": len(raw_code)}, True)
+                    
+                    # Synchronize state across cluster nodes via CRDT consensus mesh
+                    self.consensus_mesh.broadcast_vtable_mutation(method_name, raw_code, fitness_score=1.0)
                     return True
             return False
         except Exception as e:
