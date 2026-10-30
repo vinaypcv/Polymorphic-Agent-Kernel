@@ -1,0 +1,27 @@
+{
+  "vtable_hot_swap_latency_us": {
+    "mean": 7736.28,
+    "p95": 8038.21,
+    "p99": 35390.4,
+    "min": 2566.3,
+    "max": 2438394.2
+  },
+  "zero_copy_ipc_1mb_latency_us": {
+    "mean": 1.05,
+    "p95": 1.5,
+    "p99": 5.1,
+    "throughput_mbps": 971905846.62
+  },
+  "smt_z3_verification_latency_ms": {
+    "mean": 2.756,
+    "p95": 4.283
+  },
+  "memory_paging_swap_latency_us": {
+    "mean": 1.76,
+    "p95": 4.01
+  },
+  "crdt_consensus_convergence_us": {
+    "mean": 1.42,
+    "p95": 1.4
+  }
+}
