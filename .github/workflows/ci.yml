@@ -31,7 +31,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y librocksdb-dev libsnappy-dev build-essential
+          sudo apt-get install -y librocksdb-dev libsnappy-dev build-essential clang
 
       - name: Install Native Dependencies (macOS)
         if: runner.os == 'macOS'
@@ -42,8 +42,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install maturin pydantic pytest trio z3-solver
 
-      - name: Build Rust PyO3 Binaries via Maturin
-        run: maturin develop --release
+      - name: Build and Install Wheel via Maturin
+        run: |
+          maturin build --release --out target/wheels
+          python -m pip install --force-reinstall target/wheels/*.whl
 
       - name: Run E2E Integration Suite (20 Test Cases)
         run: python -m pytest -v tests/
