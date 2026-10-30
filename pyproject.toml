@@ -1,0 +1,18 @@
+[build-system]
+requires = ["maturin>=1.0,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "pak-core"
+version = "0.2.0"
+description = "High-Performance Autonomous Agent Operating System (AAOS) Kernel."
+requires-python = ">=3.8"
+dependencies = [
+    "pydantic>=2.0",
+    "pytest>=7.0",
+    "trio>=0.22.0",
+    "z3-solver>=4.12.0"
+]
+
+[tool.maturin]
+python-packages = ["pak"]

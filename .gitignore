@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.venv/
+target/
+Cargo.lock
+pak_vault/
+pak_rocksdb_test_vault/
+test_rocksdb_vault/
+/tmp/pak_sandbox_*
+.vhs/
+assets/*.mp4
+assets/*.gif
